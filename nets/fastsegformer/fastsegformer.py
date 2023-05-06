@@ -1,4 +1,4 @@
-from poolformer import poolformer_s12_feat as backbone_s12
+from .poolformer import poolformer_s12_feat as backbone_s12
 
 import torch.nn as nn
 import torch

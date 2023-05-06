@@ -3,6 +3,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
+from configs import default_config
+
+
 class CrossEntropy(nn.Module):
     def __init__(self, weight=None, num_classes=19):
         # weight代表每个类别的权重
@@ -13,7 +16,7 @@ class CrossEntropy(nn.Module):
             ignore_index=num_classes
         )
 
-    def forward(self, input, target):
+    def _forward(self, input, target):
 
         n, c, h, w = input.size()
         nt, ht, wt = target.size()
@@ -26,6 +29,21 @@ class CrossEntropy(nn.Module):
         loss = self.criterion(temp_input, temp_target)
 
         return loss
+    
+    def forward(self, input, target):
+
+        if default_config.MODEL.NUM_OUTPUTS == 1:
+            input = [input]
+
+        balance_weights = default_config.LOSS.BALANCE_WEIGHTS
+        sb_weights = default_config.LOSS.SB_WEIGHTS
+        if len(balance_weights) == len(input):
+            return sum([w * self._forward(x, target) for (w, x) in zip(balance_weights, input)])
+        elif len(input) == 1:
+            return sb_weights * self._forward(input[0], target)
+        
+        else:
+            raise ValueError("lengths of prediction and target are not identical!")
 
 
 class Focal_loss(nn.Module):
@@ -36,7 +54,7 @@ class Focal_loss(nn.Module):
         self.num_classes = num_classes
         self.criterion = nn.CrossEntropyLoss(weight=weight, ignore_index=num_classes, reduction='none')
     
-    def forward(self, input, target):
+    def _forward(self, input, target):
         
         n, c, h, w = input.size()
         nt, ht, wt = target.size()
@@ -53,5 +71,21 @@ class Focal_loss(nn.Module):
         loss = -((1 - pt) ** self.gamma) * logpt
         loss = loss.mean()
         return loss
+    
+    def forward(self, input, target):
+
+        if default_config.MODEL.NUM_OUTPUTS == 1:
+            input = [input]
+
+        balance_weights = default_config.LOSS.BALANCE_WEIGHTS
+        sb_weights = default_config.LOSS.SB_WEIGHTS
+        if len(balance_weights) == len(input):
+            return sum([w * self._forward(x, target) for (w, x) in zip(balance_weights, input)])
+        elif len(input) == 1:
+            return sb_weights * self._forward(input[0], target)
+        
+        else:
+            raise ValueError("lengths of prediction and target are not identical!")
+
             
 
