@@ -49,7 +49,7 @@ _C.TRAIN.IMAGE_SIZE = [1024, 1024]                                          # wi
 _C.TRAIN.BASE_SIZE = 2048                                                   # 缩放因子需要的原始的尺寸
 _C.TRAIN.FLIP = True                                                        # 是否进行翻转
 _C.TRAIN.MULTI_SCALE = True                                                 # 是否进行多尺度训练
-_C.TRAIN.SCALE_FACTOR = 16                                                  # 缩放因子
+_C.TRAIN.SCALE_FACTOR = 16                                                  # 缩放因子,代表输出的图像为[2048, 2048] / 16 = [128, 128](PIDNet)
 
 _C.TRAIN.LR = 0.01
 _C.TRAIN.EXTRA_LR = 0.001
@@ -70,7 +70,7 @@ _C.TRAIN.SHUFFLE = True
 
 # Validation
 _C.VAL = CN()
-_C.VAL.IMAGE_SIZE = [2048, 1024]                                             # width * height
+_C.VAL.IMAGE_SIZE = [2048, 1024]                                             # width * height 原图为[2048, 1024]
 _C.VAL.BASE_SIZE = 2048
 _C.VAL.BATCH_SIZE_PER_GPU = 32
 _C.VAL.MODEL_WEIGHT = ''
