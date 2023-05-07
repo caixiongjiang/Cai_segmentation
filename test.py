@@ -40,5 +40,5 @@ def model_test():
 
 
 if __name__ == '__main__':
-    # log_test()
-    model_test()
+    log_test()
+    # model_test()

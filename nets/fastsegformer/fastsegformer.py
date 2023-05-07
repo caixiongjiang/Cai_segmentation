@@ -341,7 +341,18 @@ class FastSegFormer(nn.Module):
 
 
         return x
+    
+    
+    def freeze_backbone(self):
+        for param in self.backbone.parameters():
+            param.requires_grad = False
+        
 
+    def unfreeze_backbone(self):
+        for param in self.backbone.parameters():
+            param.requires_grad = True
+
+    
     def getModelSize(self, model):
         param_size = 0
         param_sum = 0

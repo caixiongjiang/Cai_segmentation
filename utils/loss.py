@@ -11,6 +11,7 @@ class CrossEntropy(nn.Module):
         # weight代表每个类别的权重
         super(CrossEntropy, self).__init__()
         self.num_classes = num_classes
+        # ignore_index设置成num_classes是为了实现前景分割，如果不是前景分割可以设置为其他值
         self.criterion = nn.CrossEntropyLoss(
             weight=weight,
             ignore_index=num_classes

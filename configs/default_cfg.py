@@ -14,6 +14,9 @@ _C.WORKERS = 2                          # 线程数
 _C.SAVE_PERIOD = 5                      # 权重保存间距
 _C.AUTO_RESUME = False                  # 自动恢复训练
 _C.PIN_MEMORY = True                    # 锁页内存
+_C.FP16 = False                         # 低精度训练，可以降低训练和推理时长
+_C.SYNC_BN = False                      # 用于分布式训练的BN加速（多机多卡）
+_C.DISTRIBUTED = False                  # 是否指定分布式训练
 
 # Cudnn related params
 _C.CUDNN = CN()
@@ -51,14 +54,16 @@ _C.TRAIN.FLIP = True                                                        # �
 _C.TRAIN.MULTI_SCALE = True                                                 # 是否进行多尺度训练
 _C.TRAIN.SCALE_FACTOR = 16                                                  # 缩放因子,代表输出的图像为[2048, 2048] / 16 = [128, 128](PIDNet)
 
+_C.TRAIN.FREEZE_BACKBONE = False                                            # 是否锁定骨干网络的参数
+_C.TRAIN.FREEZE_EPOCH = 50                                                  # 锁定骨干网络的轮数
+
 _C.TRAIN.LR = 0.01
-_C.TRAIN.EXTRA_LR = 0.001
+_C.LR_DECAY = 'cos'                                                          # 学习率下降的方式 'cos' or 'step'
 
 _C.TRAIN.OPTIMIZER = 'sgd'                                                   # SGD or Adam
 _C.TRAIN.MOMENTUM = 0.9
 _C.TRAIN.WD = 0.0001                                                         # if SGD weight_decay = 0.0001 , if Adam weight_decay = None
-_C.TRAIN.NESTEROV = False
-_C.TRAIN.IGNORE_LABEL = -1
+_C.TRAIN.IGNORE_LABEL = -1                                                   # 像素值为255的区域用于表示无效或未标记的区域，如果为前景分割，需要设置为分类数
 
 _C.TRAIN.BEGIN_EPOCH = 0
 _C.TRAIN.END_EPOCH = 1000
@@ -74,7 +79,7 @@ _C.VAL.IMAGE_SIZE = [2048, 1024]                                             # w
 _C.VAL.BASE_SIZE = 2048
 _C.VAL.BATCH_SIZE_PER_GPU = 32
 _C.VAL.MODEL_WEIGHT = ''
-_C.VAL.FLIP_TEST = False
+_C.VAL.FLIP = False
 _C.VAL.MULTI_SCALE = False
 
 _C.VAL.OUTPUT_INDEX = -1                                                     # 多输出时选择进行验证的头
